@@ -111,8 +111,15 @@ def board_to_html(board):
             f"border:6px solid #bbada0; font-family:'Trebuchet MS',sans-serif;"
         )
 
-    display_df = df.applymap(lambda v: "" if v == 0 else v)
-    styler = display_df.style.applymap(lambda v: cell_style(int(v) if v != "" else 0))
+    try:
+        display_df = df.map(lambda v: "" if v == 0 else v)
+    except AttributeError:
+        display_df = df.applymap(lambda v: "" if v == 0 else v)
+
+    try:
+        styler = display_df.style.map(lambda v: cell_style(int(v) if v != "" else 0))
+    except AttributeError:
+        styler = display_df.style.applymap(lambda v: cell_style(int(v) if v != "" else 0))
     styler = styler.set_table_attributes(
         "style='border-collapse:separate;border-spacing:6px;background:#bbada0;"
         "padding:10px;border-radius:10px;margin:auto;'"
